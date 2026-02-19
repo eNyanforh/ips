@@ -7,94 +7,165 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0d1117;--paper:#f7f4ef;--cream:#ede8dc;--accent:#c0392b;--accent2:#12325a;--muted:#6b6252;--rule:rgba(13,17,23,0.1);}
+/* ── RESET & TOKENS ── */
+:root{
+  --ink:#0d1117; --paper:#f7f4ef; --cream:#ede8dc;
+  --accent:#c0392b; --accent2:#12325a; --muted:#6b6252;
+  --rule:rgba(13,17,23,0.1);
+}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(247,244,239,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:68px;transition:box-shadow .3s;}
-.nav-logo{display:flex;align-items:center;gap:14px;}
-.nav-logo-mark{width:38px;height:38px;background:var(--accent2);display:flex;align-items:center;justify-content:center;}
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  background:rgba(247,244,239,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5vw;height:68px;transition:box-shadow .3s;
+}
+.nav-logo{display:flex;align-items:center;gap:14px;cursor:pointer;text-decoration:none;}
+.nav-logo-mark{width:38px;height:38px;background:var(--accent2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .nav-logo-mark svg{width:20px;height:20px;}
-.nav-logo-text{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;}
+.nav-logo-text{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;color:var(--ink);}
 .nav-logo-text span{color:var(--accent);display:block;}
-.nav-links{display:flex;gap:2rem;list-style:none;}
-.nav-links a{font-size:12.5px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;color:var(--ink);opacity:.6;transition:opacity .2s;}
-.nav-links a:hover{opacity:1;}
-.nav-cta{background:var(--accent)!important;color:#fff!important;opacity:1!important;padding:9px 22px!important;}
+.nav-links{display:flex;gap:0;list-style:none;align-items:center;}
+.nav-links li a{
+  display:block;font-size:11.5px;font-weight:500;letter-spacing:.07em;
+  text-transform:uppercase;text-decoration:none;color:var(--ink);
+  padding:8px 12px;border-bottom:2px solid transparent;
+  transition:color .2s, border-color .2s;
+  white-space:nowrap;opacity:.65;
+}
+.nav-links li a:hover{opacity:1;}
+.nav-links li a.active{opacity:1;border-bottom-color:var(--accent);color:var(--accent);}
+.nav-cta{background:var(--accent)!important;color:#fff!important;opacity:1!important;border-bottom:none!important;margin-left:.5rem;padding:8px 18px!important;}
+.nav-cta.active{border-bottom:none!important;}
 
-/* HERO */
-.hero{position:relative;height:100vh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden;}
-.hero-bg{
-  position:absolute;inset:0;z-index:0;
-  background:url('/assets/images/Hero.JPG') center center/cover no-repeat;
-  animation:heroZoom 18s ease-in-out infinite alternate;
+/* ── HAMBURGER ── */
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:400;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--ink);border-radius:2px;transition:all .3s ease;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* ── MOBILE MENU ── */
+.mobile-menu{
+  position:fixed;top:68px;left:0;right:0;bottom:0;z-index:250;
+  background:var(--paper);
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto;padding:1.5rem 6vw 4rem;
+  display:flex;flex-direction:column;
 }
-@keyframes heroZoom{from{transform:scale(1.0)}to{transform:scale(1.07)}}
-.hero-gradient{
-  position:absolute;inset:0;z-index:1;
-  background:
-    linear-gradient(to right,rgba(13,17,23,.85) 0%,rgba(13,17,23,.5) 55%,rgba(13,17,23,.18) 100%),
-    linear-gradient(to top,rgba(13,17,23,.75) 0%,transparent 55%);
+.mobile-menu.open{transform:translateX(0);}
+.mobile-menu a{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;
+  color:var(--ink);text-decoration:none;
+  padding:1rem 0;border-bottom:1px solid var(--rule);transition:color .2s;
 }
-.hero-content{position:relative;z-index:2;width:100%;padding:0 8vw 7rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end;}
-.hero-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;}
-.hero-eyebrow::before{content:'';display:block;width:36px;height:1px;background:var(--accent);}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,6.5vw,6.2rem);font-weight:900;line-height:1.03;letter-spacing:-.03em;color:#fff;margin-bottom:2rem;}
-.hero-title em{font-style:italic;color:var(--accent);}
-.hero-desc{font-size:1.05rem;color:rgba(255,255,255,.7);max-width:460px;line-height:1.85;margin-bottom:2.5rem;}
-.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 30px;font-size:12.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;}
+.mobile-menu a:hover,.mobile-menu a.active{color:var(--accent);}
+.mobile-menu a .arr{font-size:.9rem;color:var(--accent);font-family:'DM Mono',monospace;}
+.mm-cta{margin-top:1.5rem;background:var(--accent);color:#fff!important;text-align:center;padding:1rem!important;font-family:'DM Sans',sans-serif!important;font-size:12px!important;letter-spacing:.1em;text-transform:uppercase;justify-content:center!important;border-bottom:none!important;}
+.mm-meta{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--rule);}
+.mm-meta p{font-size:.85rem;color:var(--muted);line-height:1.7;}
+.mm-meta strong{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.4rem;}
+body.menu-open{overflow:hidden;}
+
+/* ── PAGE CONTAINER ── */
+#app{padding-top:68px;min-height:100vh;}
+.page{display:none;animation:pageIn .35s ease;}
+.page.active{display:block;}
+@keyframes pageIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── SHARED UTILITIES ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;}
 .btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:#a83224;}
 .btn-white{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);}.btn-white:hover{background:#fff;color:var(--ink);}
 .btn-secondary{background:transparent;color:var(--ink);border:1.5px solid var(--ink);}.btn-secondary:hover{background:var(--ink);color:var(--paper);}
+.section{padding:6rem 8vw;}
+.sh{display:grid;grid-template-columns:50px 1fr;gap:2rem;align-items:end;margin-bottom:4rem;padding-bottom:2rem;border-bottom:1px solid var(--rule);}
+.sn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--accent);padding-top:6px;}
+.st{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.5vw,3rem);font-weight:700;line-height:1.1;}
+.ss{font-size:1rem;color:var(--muted);margin-top:.75rem;max-width:560px;}
 
+/* ── PAGE HERO BANNER (inner pages) ── */
+.page-hero{
+  position:relative;overflow:hidden;
+  height:320px;display:flex;align-items:flex-end;
+}
+.page-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(20%);}
+.page-hero-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(18,50,90,.95) 0%,rgba(18,50,90,.5) 60%,rgba(18,50,90,.2) 100%);}
+.page-hero-ct{position:relative;z-index:2;padding:3rem 8vw;width:100%;}
+.page-hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.8rem;}
+.page-hero-ct h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:900;color:#fff;line-height:1.1;}
+.page-hero-ct p{color:rgba(255,255,255,.7);max-width:560px;margin-top:.75rem;font-size:1rem;line-height:1.7;}
+
+/* ── TICKER ── */
+.ticker{background:var(--accent2);padding:10px 0;overflow:hidden;border-bottom:3px solid var(--accent);}
+.ticker-inner{display:flex;animation:ticker 35s linear infinite;white-space:nowrap;}
+.ticker-item{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 2.5rem;display:flex;align-items:center;gap:.8rem;}
+.ticker-item::before{content:'◆';color:var(--accent);font-size:6px;}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── HOME: HERO ── */
+.hero{position:relative;height:calc(100vh - 68px);min-height:560px;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;background:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1800&q=85') center/cover no-repeat;animation:heroZoom 18s ease-in-out infinite alternate;}
+@keyframes heroZoom{from{transform:scale(1)}to{transform:scale(1.07)}}
+.hero-gradient{position:absolute;inset:0;z-index:1;background:linear-gradient(to right,rgba(13,17,23,.88) 0%,rgba(13,17,23,.5) 55%,rgba(13,17,23,.15) 100%),linear-gradient(to top,rgba(13,17,23,.78) 0%,transparent 55%);}
+.hero-content{position:relative;z-index:2;width:100%;padding:0 8vw 6rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;}
+.hero-eyebrow::before{content:'';display:block;width:36px;height:1px;background:var(--accent);}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5.8rem);font-weight:900;line-height:1.03;letter-spacing:-.03em;color:#fff;margin-bottom:1.8rem;}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-desc{font-size:1.05rem;color:rgba(255,255,255,.7);max-width:460px;line-height:1.85;margin-bottom:2.5rem;}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
 .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);}
 .hero-stat{background:rgba(13,17,23,.6);backdrop-filter:blur(8px);padding:1.8rem 2rem;}
-.hero-stat-num{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:900;color:#fff;line-height:1;margin-bottom:.4rem;}
-.hero-stat-num sup{font-size:1.1rem;color:var(--accent);}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:#fff;line-height:1;margin-bottom:.4rem;}
+.hero-stat-num sup{font-size:1rem;color:var(--accent);}
 .hero-stat-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);}
-
-.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);}
-.hero-scroll-line{width:1px;height:40px;background:rgba(255,255,255,.2);position:relative;overflow:hidden;}
+.hero-scroll{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.hero-scroll-line{width:1px;height:36px;background:rgba(255,255,255,.2);position:relative;overflow:hidden;}
 .hero-scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--accent);animation:scrollAnim 2s ease-in-out infinite;}
 @keyframes scrollAnim{0%{top:-100%}100%{top:100%}}
 
-/* TICKER */
-.ticker{background:var(--accent2);padding:11px 0;overflow:hidden;border-bottom:3px solid var(--accent);}
-.ticker-inner{display:flex;animation:ticker 35s linear infinite;white-space:nowrap;}
-.ticker-item{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 3rem;display:flex;align-items:center;gap:1rem;}
-.ticker-item::before{content:'◆';color:var(--accent);font-size:7px;}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* ABOUT */
+/* ── HOME: ABOUT STRIP ── */
 .about-strip{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--rule);}
-.about-img-col{position:relative;overflow:hidden;min-height:480px;}
+.about-img-col{position:relative;overflow:hidden;min-height:460px;}
 .about-img-col img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s;}
 .about-img-col:hover img{transform:scale(1.04);}
-.about-label{position:absolute;bottom:24px;left:24px;background:var(--accent2);color:#fff;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;}
-.about-text{padding:5rem 6vw;display:flex;flex-direction:column;justify-content:center;background:var(--cream);}
-.about-text h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;margin-bottom:1.5rem;line-height:1.2;}
+.about-label{position:absolute;bottom:20px;left:20px;background:var(--accent2);color:#fff;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;}
+.about-text{padding:4.5rem 6vw;display:flex;flex-direction:column;justify-content:center;background:var(--cream);}
+.about-text h2{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;margin-bottom:1.5rem;line-height:1.2;}
 .about-text p{color:var(--muted);line-height:1.9;margin-bottom:1.2rem;}
 .pillars{display:flex;gap:2.5rem;margin-top:2rem;flex-wrap:wrap;}
 .pillar-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--accent);}
 .pillar-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
 
-/* FIELDWORK */
+/* ── FIELDWORK STRIP ── */
 .fw-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--rule);}
-.fw-img{position:relative;overflow:hidden;height:260px;}
+.fw-img{position:relative;overflow:hidden;height:240px;}
 .fw-img img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(20%);transition:transform .5s,filter .4s;}
 .fw-img:hover img{transform:scale(1.07);filter:grayscale(0%);}
-.fw-cap{position:absolute;bottom:0;left:0;right:0;background:rgba(18,50,90,.82);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85);}
+.fw-cap{position:absolute;bottom:0;left:0;right:0;background:rgba(18,50,90,.82);padding:10px 14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 
-/* SECTION */
-.section{padding:7rem 8vw;}
-.sh{display:grid;grid-template-columns:56px 1fr;gap:2rem;align-items:end;margin-bottom:4rem;padding-bottom:2rem;border-bottom:1px solid var(--rule);}
-.sn{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.18em;color:var(--accent);padding-top:6px;}
-.st{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.5vw,3rem);font-weight:700;line-height:1.1;}
-.ss{font-size:1rem;color:var(--muted);margin-top:.75rem;max-width:560px;}
+/* ── HOME: IMPACT BANNER ── */
+.ib{position:relative;overflow:hidden;min-height:400px;display:flex;align-items:center;}
+.ib-img{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1400&q=80') center/cover;filter:grayscale(25%);}
+.ib-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,50,90,.96) 40%,rgba(18,50,90,.7) 100%);}
+.ib-ct{position:relative;z-index:2;padding:5rem 8vw;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%;}
+.ib-ct h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+.ib-ct p{color:rgba(255,255,255,.65);line-height:1.8;}
+.ib-sg{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.ib-s{background:rgba(255,255,255,.06);padding:1.8rem;border:1px solid rgba(255,255,255,.08);}
+.ib-sn{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1;}
+.ib-sn sup{color:var(--accent);font-size:1.2rem;}
+.ib-sl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.4rem;}
 
-/* RESEARCH */
+/* ── RESEARCH PAGE ── */
 .rg{display:grid;grid-template-columns:repeat(3,1fr);}
 .rc{position:relative;overflow:hidden;min-height:360px;display:flex;flex-direction:column;justify-content:flex-end;}
 .rc-img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .55s;}
@@ -109,20 +180,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(247,244,239,
 .rc-lk{display:inline-flex;align-items:center;gap:6px;margin-top:.8rem;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-decoration:none;font-family:'DM Mono',monospace;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;}
 .rc:hover .rc-lk{opacity:1;transform:translateY(0);}
 
-/* IMPACT */
-.ib{position:relative;overflow:hidden;min-height:420px;display:flex;align-items:center;}
-.ib-img{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1400&q=80') center/cover;filter:grayscale(25%);}
-.ib-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,50,90,.96) 40%,rgba(18,50,90,.7) 100%);}
-.ib-ct{position:relative;z-index:2;padding:5rem 8vw;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%;}
-.ib-ct h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:#fff;line-height:1.2;margin-bottom:1.5rem;}
-.ib-ct p{color:rgba(255,255,255,.65);line-height:1.8;}
-.ib-sg{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
-.ib-s{background:rgba(255,255,255,.06);padding:1.8rem;border:1px solid rgba(255,255,255,.08);}
-.ib-sn{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1;}
-.ib-sn sup{color:var(--accent);font-size:1.2rem;}
-.ib-sl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.4rem;}
-
-/* PUBS */
+/* ── PUBLICATIONS PAGE ── */
 .section--pubs{background:var(--cream);}
 .pub-list{display:flex;flex-direction:column;}
 .pub-item{display:grid;grid-template-columns:70px 1fr 110px;align-items:start;gap:2rem;padding:2.2rem 0;border-bottom:1px solid var(--rule);transition:all .2s;}
@@ -134,18 +192,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(247,244,239,
 .badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;padding:4px 10px;height:fit-content;white-space:nowrap;text-align:center;}
 .b-new{background:var(--accent2);color:#fff;}.b-oa{background:#1a7a4a;color:#fff;}.b-wp{background:var(--cream);color:var(--muted);border:1px solid var(--rule);}.b-ci{background:var(--ink);color:#fff;}
 
-/* PEOPLE */
+/* ── PEOPLE PAGE ── */
 .pg{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--rule);}
 .pc{background:var(--paper);overflow:hidden;}
 .pc-iw{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--cream);}
 .pc-iw img{width:100%;height:100%;object-fit:cover;object-position:top;filter:grayscale(15%);transition:filter .4s,transform .5s;}
 .pc:hover .pc-iw img{filter:grayscale(0%);transform:scale(1.04);}
-.pc-bd{padding:1.5rem 1.5rem 2rem;}
+.pc-bd{padding:1.4rem 1.4rem 1.8rem;}
 .pc-nm{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:4px;font-weight:700;}
 .pc-ro{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
 .pc-fi{font-size:.85rem;color:var(--muted);}
 
-/* NEWS */
+/* ── NEWS PAGE ── */
 .section--news{background:var(--cream);}
 .ng{display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:2px;background:var(--rule);}
 .nc{background:var(--cream);overflow:hidden;display:flex;flex-direction:column;transition:background .3s;}
@@ -161,7 +219,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(247,244,239,
 .nc p{font-size:.88rem;color:var(--muted);line-height:1.75;flex:1;}
 .nc-lk{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);text-decoration:none;margin-top:1.5rem;font-family:'DM Mono',monospace;border-bottom:1px solid var(--accent2);padding-bottom:2px;width:fit-content;}
 
-/* DATA */
+/* ── DATA PAGE ── */
 .section--data{background:var(--ink);color:#fff;}
 .section--data .st{color:#fff;}.section--data .ss{color:rgba(255,255,255,.4);}.section--data .sn{color:var(--accent);}.section--data .sh{border-bottom-color:rgba(255,255,255,.1);}
 .dg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.07);}
@@ -174,21 +232,59 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(247,244,239,
 .dc-bd p{font-size:.88rem;color:rgba(255,255,255,.4);line-height:1.75;flex:1;}
 .dc-lk{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;margin-top:1.5rem;font-family:'DM Mono',monospace;border-bottom:1px solid var(--accent);padding-bottom:2px;width:fit-content;}
 
-/* EVENTS */
+/* ── PROGRAMS PAGE ── */
+.section--programs{background:var(--accent2);color:#fff;}
+.section--programs .st{color:#fff;}.section--programs .ss{color:rgba(255,255,255,.5);}.section--programs .sn{color:rgba(255,255,255,.35);}.section--programs .sh{border-bottom-color:rgba(255,255,255,.12);}
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.08);}
+.prog-card{background:rgba(255,255,255,.04);overflow:hidden;display:flex;flex-direction:column;transition:background .3s;}
+.prog-card:hover{background:rgba(255,255,255,.09);}
+.prog-img{width:100%;height:200px;overflow:hidden;position:relative;}
+.prog-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(30%) brightness(.7);transition:filter .4s,transform .5s;}
+.prog-card:hover .prog-img img{filter:grayscale(0%) brightness(.85);transform:scale(1.05);}
+.prog-img-label{position:absolute;top:14px;left:14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85);background:rgba(18,50,90,.7);padding:4px 10px;}
+.prog-body{padding:1.8rem;flex:1;display:flex;flex-direction:column;}
+.prog-icon{font-size:1.5rem;margin-bottom:.8rem;line-height:1;}
+.prog-body h3{font-family:'Playfair Display',serif;font-size:1.25rem;color:#fff;margin-bottom:.7rem;line-height:1.2;}
+.prog-body p{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.75;flex:1;}
+.prog-meta{margin-top:1.4rem;display:flex;align-items:center;justify-content:space-between;}
+.prog-projects{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.prog-link{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px;}
+
+/* ── PARTNERS PAGE ── */
+.partners-intro{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-bottom:4rem;}
+.partners-intro h3{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:1rem;line-height:1.2;}
+.partners-intro p{font-size:1rem;color:var(--muted);line-height:1.85;}
+.partner-tiers{display:flex;flex-direction:column;gap:4rem;}
+.partner-tier-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+.partner-tier-label::after{content:'';flex:1;height:1px;background:var(--rule);}
+.partner-logos{display:grid;gap:1px;background:var(--rule);}
+.tier-founding .partner-logos{grid-template-columns:repeat(3,1fr);}
+.tier-strategic .partner-logos{grid-template-columns:repeat(4,1fr);}
+.tier-network .partner-logos{grid-template-columns:repeat(6,1fr);}
+.partner-logo-card{background:var(--paper);padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:background .25s;}
+.partner-logo-card:hover{background:var(--cream);}
+.partner-logo-emblem{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:#fff;flex-shrink:0;}
+.partner-logo-card h4{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;text-align:center;line-height:1.3;}
+.partner-logo-card span{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.tier-strategic .partner-logo-card,.tier-network .partner-logo-card{padding:1.8rem 1.2rem;}
+.tier-network .partner-logo-emblem{width:40px;height:40px;font-size:.8rem;}
+.tier-network .partner-logo-card h4{font-size:.85rem;}
+
+/* ── EVENTS PAGE ── */
 .el{display:flex;flex-direction:column;}
 .ei{display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:2.5rem;padding:2rem 0;border-bottom:1px solid var(--rule);transition:all .2s;}
 .ei:hover{background:rgba(18,50,90,.03);padding-left:1rem;padding-right:1rem;margin:0 -1rem;}
-.ed{background:var(--accent2);color:#fff;text-align:center;padding:1rem;}
+.ed{background:var(--accent2);color:#fff;text-align:center;padding:1rem;flex-shrink:0;}
 .e-day{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1;}
 .e-mon{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;opacity:.65;margin-top:4px;}
 .e-ti{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:6px;}
 .e-me{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.04em;}
 .e-ty{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:'DM Mono',monospace;padding:5px 12px;background:var(--cream);color:var(--muted);white-space:nowrap;height:fit-content;}
 
-/* CONTACT */
+/* ── CONTACT PAGE ── */
 .section--contact{background:var(--cream);}
 .cg{display:grid;grid-template-columns:1fr 1fr;gap:6rem;}
-.ci h2{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;margin-bottom:1.2rem;}
+.ci h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;margin-bottom:1.2rem;}
 .ci p{color:var(--muted);line-height:1.85;margin-bottom:1.5rem;}
 .cd{display:flex;gap:1rem;margin-bottom:1.2rem;align-items:flex-start;}
 .dl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);min-width:72px;padding-top:3px;}
@@ -202,274 +298,804 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(247,244,239,
 .fi,.fs,.fta{background:var(--paper);border:1px solid var(--rule);padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--ink);outline:none;transition:border-color .2s;width:100%;}
 .fi:focus,.fs:focus,.fta:focus{border-color:var(--accent2);}
 .fta{min-height:110px;resize:vertical;}
+.form-success{display:none;background:#1a7a4a;color:#fff;padding:1.2rem 1.6rem;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
+.form-success.show{display:block;}
 
-/* FOOTER */
-footer{background:var(--ink);color:rgba(255,255,255,.5);padding:5rem 8vw 3rem;}
-.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;padding-bottom:3.5rem;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2.5rem;}
-.fb{font-family:'Playfair Display',serif;font-size:1.5rem;color:#fff;font-weight:700;margin-bottom:1rem;line-height:1.25;}
+/* ── FOOTER ── */
+footer{background:var(--ink);color:rgba(255,255,255,.5);padding:4.5rem 8vw 2.5rem;}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3.5rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2rem;}
+.fb{font-family:'Playfair Display',serif;font-size:1.4rem;color:#fff;font-weight:700;margin-bottom:1rem;line-height:1.25;}
 .ftg{font-size:.85rem;line-height:1.8;}
 .fc h4{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-family:'DM Mono',monospace;color:rgba(255,255,255,.3);margin-bottom:1.5rem;}
-.fc ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
-.fc a{font-size:.88rem;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;}.fc a:hover{color:#fff;}
-.fb-bot{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.05em;}
+.fc ul{list-style:none;display:flex;flex-direction:column;gap:.65rem;}
+.fc ul a{font-size:.85rem;color:rgba(255,255,255,.5);text-decoration:none;cursor:pointer;transition:color .2s;}
+.fc ul a:hover{color:#fff;}
+.fb-bot{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.04em;}
 .pb{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;}
 .pbadge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.1);padding:5px 12px;}
 
-.fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+/* ── FADE-UP ANIMATION ── */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease;}
 .fade-up.visible{opacity:1;transform:translateY(0);}
 
+/* ════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ════════════════════════════════ */
+
+/* TABLET 1024 */
+@media(max-width:1024px){
+  .nav-links li a{font-size:11px;padding:8px 9px;}
+}
+
+/* TABLET 900 */
 @media(max-width:900px){
-  .hero-content{grid-template-columns:1fr;}
-  .hero-stats{display:none;}
-  .about-strip,.cg{grid-template-columns:1fr;}
-  .rg,.dg{grid-template-columns:1fr 1fr;}
-  .pg{grid-template-columns:1fr 1fr;}
-  .ng,.ft{grid-template-columns:1fr;}
-  .fw-strip{grid-template-columns:1fr 1fr;}
-  .ib-ct{grid-template-columns:1fr;}
-  .ei{grid-template-columns:90px 1fr;}
-  .e-ty{display:none;}
-  .pub-item{grid-template-columns:60px 1fr;}
-}
-@media(max-width:600px){
+  .hamburger{display:flex;}
   .nav-links{display:none;}
-  .rg,.fw-strip{grid-template-columns:1fr;}
-  .fr{grid-template-columns:1fr;}
+
+  .hero-content{grid-template-columns:1fr;padding:0 6vw 5rem;}
+  .hero-stats{max-width:380px;}
+
+  .about-strip{grid-template-columns:1fr;}
+  .about-img-col{min-height:300px;}
+  .about-text{padding:3.5rem 6vw;}
+
+  .fw-strip{grid-template-columns:1fr 1fr;}
+  .fw-img{height:200px;}
+
   .section{padding:5rem 6vw;}
+  .sh{grid-template-columns:42px 1fr;gap:1.2rem;}
+
+  .rg{grid-template-columns:1fr 1fr;}
+  .rc{min-height:300px;}
+
+  .ib-ct{grid-template-columns:1fr;gap:3rem;padding:4rem 6vw;}
+
+  .pub-item{grid-template-columns:55px 1fr;gap:1.5rem;}
+  .badge{display:none;}
+
+  .pg{grid-template-columns:repeat(2,1fr);}
+
+  .ng{grid-template-columns:1fr;}
+
+  .dg{grid-template-columns:1fr 1fr;}
+
+  .prog-grid{grid-template-columns:1fr 1fr;}
+
+  .partners-intro{grid-template-columns:1fr;}
+  .partners-intro img{height:220px!important;}
+  .tier-founding .partner-logos{grid-template-columns:repeat(3,1fr);}
+  .tier-strategic .partner-logos{grid-template-columns:repeat(3,1fr);}
+  .tier-network .partner-logos{grid-template-columns:repeat(3,1fr);}
+
+  .ei{grid-template-columns:90px 1fr;gap:1.5rem;}
+  .e-ty{display:none;}
+
+  .cg{grid-template-columns:1fr;}
+  .ft{grid-template-columns:1fr 1fr;gap:2.5rem;}
+  .fb-bot{flex-direction:column;gap:.6rem;text-align:center;}
+
+  .page-hero{height:260px;}
+  .page-hero-ct h1{font-size:1.8rem;}
 }
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--paper);}::-webkit-scrollbar-thumb{background:var(--accent2);}
+
+/* MOBILE 600 */
+@media(max-width:600px){
+  .hero{min-height:100svh;}
+  .hero-content{padding:0 5vw 4rem;}
+  .hero-title{font-size:clamp(2.2rem,10vw,3.2rem);}
+  .hero-desc{font-size:.93rem;}
+  .hero-actions{flex-direction:column;align-items:stretch;}
+  .hero-actions .btn{text-align:center;justify-content:center;}
+  .hero-stats{grid-template-columns:1fr 1fr;max-width:100%;}
+  .hero-stat{padding:1.2rem .8rem;}
+  .hero-stat-num{font-size:1.8rem;}
+
+  .fw-strip{grid-template-columns:1fr;}
+  .fw-img{height:200px;}
+
+  .section{padding:3.5rem 5vw;}
+  .sh{grid-template-columns:1fr;gap:.5rem;}
+  .sn{display:none;}
+  .st{font-size:clamp(1.6rem,6vw,2.2rem);}
+
+  .rg{grid-template-columns:1fr;}
+  .rc{min-height:280px;}
+
+  .about-text{padding:3rem 5vw;}
+  .about-text h2{font-size:1.7rem;}
+
+  .ib-ct{padding:3rem 5vw;}
+  .ib-ct h2{font-size:1.6rem;}
+  .ib-sg{grid-template-columns:1fr 1fr;}
+
+  .pub-item{grid-template-columns:1fr;gap:.8rem;}
+  .pub-jo{display:none;}
+
+  .pg{grid-template-columns:1fr 1fr;}
+  .pc-iw{aspect-ratio:4/5;}
+
+  .ng{grid-template-columns:1fr;}
+
+  .dg{grid-template-columns:1fr;}
+  .dc-img{height:150px;}
+
+  .prog-grid{grid-template-columns:1fr;}
+  .prog-img{height:170px;}
+
+  .tier-founding .partner-logos{grid-template-columns:1fr 1fr;}
+  .tier-strategic .partner-logos{grid-template-columns:1fr 1fr;}
+  .tier-network .partner-logos{grid-template-columns:repeat(2,1fr);}
+  .partner-logo-card{padding:1.2rem 1rem;}
+
+  .ei{grid-template-columns:76px 1fr;gap:1rem;padding:1.4rem 0;}
+  .e-day{font-size:1.8rem;}
+  .e-ti{font-size:1rem;}
+
+  .fr{grid-template-columns:1fr;}
+
+  .ft{grid-template-columns:1fr 1fr;}
+  .fb-bot{flex-direction:column;gap:.6rem;text-align:center;font-size:10px;}
+
+  .ticker-item{padding:0 1.5rem;font-size:9px;}
+
+  .page-hero{height:220px;}
+  .page-hero-ct{padding:2rem 5vw;}
+  .page-hero-ct h1{font-size:1.5rem;}
+}
+
+/* VERY SMALL 380 */
+@media(max-width:380px){
+  .hero-title{font-size:2rem;}
+  .pg{grid-template-columns:1fr;}
+  .tier-network .partner-logos{grid-template-columns:1fr;}
+}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--paper);}
+::-webkit-scrollbar-thumb{background:var(--accent2);}
 </style>
 </head>
 <body>
 
+<!-- ══════════════ NAV ══════════════ -->
 <nav id="main-nav">
-  <div class="nav-logo">
+  <a class="nav-logo" data-page="home">
     <div class="nav-logo-mark">
-      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="3" fill="white"/><circle cx="5.5" cy="17" r="2.5" fill="white"/><circle cx="18.5" cy="17" r="2.5" fill="white"/><line x1="12" y1="10" x2="5.5" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="10" x2="18.5" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="7" r="3" fill="white"/>
+        <circle cx="5.5" cy="17" r="2.5" fill="white"/>
+        <circle cx="18.5" cy="17" r="2.5" fill="white"/>
+        <line x1="12" y1="10" x2="5.5" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="12" y1="10" x2="18.5" y2="15" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
     </div>
     <div class="nav-logo-text">Institute for<span>Population Studies</span></div>
-  </div>
+  </a>
   <ul class="nav-links">
-    <li><a href="#research">Research</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#people">People</a></li>
-    <li><a href="#data">Data</a></li>
-    <li><a href="#news">News</a></li>
-    <li><a href="#events">Events</a></li>
-    <li><a href="#contact" class="nav-cta">Contact</a></li>
+    <li><a data-page="home">Home</a></li>
+    <li><a data-page="research">Research</a></li>
+    <li><a data-page="publications">Publications</a></li>
+    <li><a data-page="people">People</a></li>
+    <li><a data-page="data">Data</a></li>
+    <li><a data-page="news">News</a></li>
+    <li><a data-page="programs">Programs</a></li>
+    <li><a data-page="partners">Partners</a></li>
+    <li><a data-page="events">Events</a></li>
+    <li><a data-page="contact" class="nav-cta">Contact</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- HERO WITH FULL BACKGROUND IMAGE -->
-<div class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-gradient"></div>
-  <div class="hero-content">
-    <div class="hero-left">
-      <div class="hero-eyebrow">Est. 1974 &nbsp;·&nbsp; Independent Research Organization</div>
-      <h1 class="hero-title">Understanding<br><em>Human</em><br>Populations</h1>
-      <p class="hero-desc">Rigorous, interdisciplinary research on demographic change, migration, health equity, and the forces reshaping societies across our world.</p>
-      <div class="hero-actions">
-        <a href="#research" class="btn btn-primary">Explore Research →</a>
-        <a href="#publications" class="btn btn-white">View Publications</a>
+<!-- MOBILE DRAWER -->
+<div class="mobile-menu" id="mobile-menu">
+  <a data-page="home">Home <span class="arr">→</span></a>
+  <a data-page="research">Research <span class="arr">→</span></a>
+  <a data-page="publications">Publications <span class="arr">→</span></a>
+  <a data-page="people">People <span class="arr">→</span></a>
+  <a data-page="data">Data &amp; Resources <span class="arr">→</span></a>
+  <a data-page="news">News &amp; Commentary <span class="arr">→</span></a>
+  <a data-page="programs">Programs <span class="arr">→</span></a>
+  <a data-page="partners">Partners &amp; Funders <span class="arr">→</span></a>
+  <a data-page="events">Events &amp; Seminars <span class="arr">→</span></a>
+  <a data-page="contact" class="mm-cta">Get In Touch →</a>
+  <div class="mm-meta">
+    <strong>Contact</strong>
+    <p>14 Scholar's Square, Cambridge MA 02138<br>info@ips-research.org · +1 (617) 555-0182</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP — ALL PAGES
+══════════════════════════════════════ -->
+<div id="app">
+
+<!-- ════════════ HOME ════════════ -->
+<div class="page" id="page-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-gradient"></div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-eyebrow">Est. 1974 · Independent Research Organization</div>
+        <h1 class="hero-title">Understanding<br><em>Human</em><br>Populations</h1>
+        <p class="hero-desc">Rigorous, interdisciplinary research on demographic change, migration, health equity, and the forces reshaping societies across our world.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" data-page="research">Explore Research →</a>
+          <a class="btn btn-white" data-page="publications">View Publications</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">42<sup>+</sup></div><div class="hero-stat-label">Years of Research</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">180</div><div class="hero-stat-label">Countries Studied</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">3.2<sup>k</sup></div><div class="hero-stat-label">Publications</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">64</div><div class="hero-stat-label">Researchers</div></div>
       </div>
     </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num">42<sup>+</sup></div><div class="hero-stat-label">Years of Research</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">180</div><div class="hero-stat-label">Countries Studied</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">3.2<sup>k</sup></div><div class="hero-stat-label">Publications</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">64</div><div class="hero-stat-label">Researchers</div></div>
+    <div class="hero-scroll"><div class="hero-scroll-line"></div><span>Scroll</span></div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker"><div class="ticker-inner">
+    <span class="ticker-item">New Report: Global Fertility Trends 2025</span>
+    <span class="ticker-item">Fellowship Applications Open — Spring 2026</span>
+    <span class="ticker-item">Conference: Population &amp; Climate, April 2026</span>
+    <span class="ticker-item">Dataset Release: Urban Migration Index v3</span>
+    <span class="ticker-item">Policy Brief: Aging Societies &amp; Labor Markets</span>
+    <span class="ticker-item">Workshop: Advanced Demographic Methods · Geneva</span>
+    <span class="ticker-item">New Report: Global Fertility Trends 2025</span>
+    <span class="ticker-item">Fellowship Applications Open — Spring 2026</span>
+    <span class="ticker-item">Conference: Population &amp; Climate, April 2026</span>
+    <span class="ticker-item">Dataset Release: Urban Migration Index v3</span>
+    <span class="ticker-item">Policy Brief: Aging Societies &amp; Labor Markets</span>
+    <span class="ticker-item">Workshop: Advanced Demographic Methods · Geneva</span>
+  </div></div>
+
+  <!-- ABOUT STRIP -->
+  <div class="about-strip">
+    <div class="about-img-col">
+      <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&q=80" alt="Researchers collaborating" loading="lazy">
+      <div class="about-label">Cambridge HQ · Est. 1974</div>
     </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="hero-scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</div>
-
-<div class="ticker"><div class="ticker-inner">
-  <span class="ticker-item">New Report: Global Fertility Trends 2025</span>
-  <span class="ticker-item">Fellowship Applications Open — Spring 2026</span>
-  <span class="ticker-item">Conference: Population &amp; Climate, April 2026</span>
-  <span class="ticker-item">Dataset Release: Urban Migration Index v3</span>
-  <span class="ticker-item">Policy Brief: Aging Societies &amp; Labor Markets</span>
-  <span class="ticker-item">Workshop: Advanced Demographic Methods · Geneva</span>
-  <span class="ticker-item">New Report: Global Fertility Trends 2025</span>
-  <span class="ticker-item">Fellowship Applications Open — Spring 2026</span>
-  <span class="ticker-item">Conference: Population &amp; Climate, April 2026</span>
-  <span class="ticker-item">Dataset Release: Urban Migration Index v3</span>
-  <span class="ticker-item">Policy Brief: Aging Societies &amp; Labor Markets</span>
-  <span class="ticker-item">Workshop: Advanced Demographic Methods · Geneva</span>
-</div></div>
-
-<div class="about-strip">
-  <div class="about-img-col">
-    <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&q=80" alt="Researchers collaborating" loading="lazy">
-    <div class="about-label">Cambridge HQ · Est. 1974</div>
-  </div>
-  <div class="about-text">
-    <h2>Science at the Service of People</h2>
-    <p>The Institute for Population Studies is an independent, non-partisan research organization committed to generating and translating evidence on the dynamics of human populations — how we live, move, age, and relate to our environments.</p>
-    <p>Our researchers partner with governments, international agencies, universities, and civil society to ensure demographic knowledge reaches those who most need it.</p>
-    <div class="pillars">
-      <div><div class="pillar-val">64</div><div class="pillar-lbl">Researchers</div></div>
-      <div><div class="pillar-val">22</div><div class="pillar-lbl">Nationalities</div></div>
-      <div><div class="pillar-val">$48M</div><div class="pillar-lbl">Research Grants</div></div>
-      <div><div class="pillar-val">180</div><div class="pillar-lbl">Partner Nations</div></div>
-    </div>
-  </div>
-</div>
-
-<div class="fw-strip fade-up">
-  <div class="fw-img"><img src="https://images.unsplash.com/photo-1594608661623-aa0bd3a69d98?w=500&q=75" alt="Kenya" loading="lazy"><div class="fw-cap">Maternal Health · Kenya</div></div>
-  <div class="fw-img"><img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=500&q=75" alt="Bangladesh" loading="lazy"><div class="fw-cap">Community Survey · Bangladesh</div></div>
-  <div class="fw-img"><img src="https://images.unsplash.com/photo-1541802645635-11f2286a7482?w=500&q=75" alt="Guatemala" loading="lazy"><div class="fw-cap">Youth Study · Guatemala</div></div>
-  <div class="fw-img"><img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=500&q=75" alt="Nairobi" loading="lazy"><div class="fw-cap">Urban Migration · Nairobi</div></div>
-</div>
-
-<section class="section" id="research">
-  <div class="sh fade-up"><div class="sn">01</div><div><h2 class="st">Research Areas</h2><p class="ss">Six interconnected domains of inquiry exploring how populations form, move, age, and transform.</p></div></div>
-  <div class="rg fade-up">
-    <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1511895426328-dc8714191011?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">01 — Fertility</div><h3>Fertility &amp; Family Formation</h3><p>Investigating long-term fertility decline, changing family structures, and the policy contexts shaping reproductive behavior.</p><a href="#" class="rc-lk">Explore →</a></div></div>
-    <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">02 — Migration</div><h3>Migration &amp; Displacement</h3><p>Examining drivers and consequences of human mobility — from forced displacement and refugee crises to urbanization worldwide.</p><a href="#" class="rc-lk">Explore →</a></div></div>
-    <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1516307365426-bea591f05011?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">03 — Aging</div><h3>Population Aging</h3><p>Studying the social, economic, and health implications of aging populations across Europe, East Asia, and the developing world.</p><a href="#" class="rc-lk">Explore →</a></div></div>
-    <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">04 — Health</div><h3>Health &amp; Mortality</h3><p>Analyzing disparities in health outcomes and mortality differentials by race, gender, and socioeconomic status across nations.</p><a href="#" class="rc-lk">Explore →</a></div></div>
-    <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">05 — Environment</div><h3>Population &amp; Environment</h3><p>Exploring intersections of demographic change, climate vulnerability, and sustainability for growing and shrinking populations.</p><a href="#" class="rc-lk">Explore →</a></div></div>
-    <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">06 — Inequality</div><h3>Inequality &amp; Stratification</h3><p>Measuring disparities in income, education, and opportunity across demographic groups and how populations reproduce social hierarchies.</p><a href="#" class="rc-lk">Explore →</a></div></div>
-  </div>
-</section>
-
-<div class="ib fade-up">
-  <div class="ib-img"></div><div class="ib-ov"></div>
-  <div class="ib-ct">
-    <div><h2>Influencing Policy Across Five Continents</h2><p>Our researchers engage with national governments, UN agencies, the World Bank, and civil society — translating demographic evidence into action at every scale.</p><div style="margin-top:2rem;"><a href="#" class="btn btn-primary">Read Our Impact Stories →</a></div></div>
-    <div class="ib-sg">
-      <div class="ib-s"><div class="ib-sn">140<sup>+</sup></div><div class="ib-sl">Policy Briefs</div></div>
-      <div class="ib-s"><div class="ib-sn">38</div><div class="ib-sl">Gov. Partnerships</div></div>
-      <div class="ib-s"><div class="ib-sn">12<sup>M</sup></div><div class="ib-sl">People Reached</div></div>
-      <div class="ib-s"><div class="ib-sn">3.2<sup>k</sup></div><div class="ib-sl">Cited Papers</div></div>
-    </div>
-  </div>
-</div>
-
-<section class="section section--pubs" id="publications">
-  <div class="sh fade-up"><div class="sn">02</div><div><h2 class="st">Recent Publications</h2><p class="ss">Peer-reviewed research, working papers, and policy briefs from our researchers.</p></div></div>
-  <div class="pub-list fade-up">
-    <div class="pub-item"><div class="pub-yr">2025</div><div><div class="pub-ti">Demographic Transitions in Sub-Saharan Africa: Speed, Variation, and Policy Implications</div><div class="pub-au">Adeyemi O., Singh R., Moreau C., Hassan F.</div><div class="pub-jo">Population and Development Review, Vol. 51(3)</div></div><div class="badge b-new">New</div></div>
-    <div class="pub-item"><div class="pub-yr">2025</div><div><div class="pub-ti">Climate-Induced Internal Migration: Systematic Review of Evidence from South and Southeast Asia</div><div class="pub-au">Chen W., Patel A., Nguyen T.L., Okafor B.</div><div class="pub-jo">Global Environmental Change, Vol. 89</div></div><div class="badge b-oa">Open Access</div></div>
-    <div class="pub-item"><div class="pub-yr">2024</div><div><div class="pub-ti">Longevity Inequality: Decomposing Life Expectancy Gaps by Income Decile in OECD Nations</div><div class="pub-au">Eriksson M., Bellamy J., Torres D.</div><div class="pub-jo">Demography, Vol. 61(4)</div></div><div class="badge b-ci">Highly Cited</div></div>
-    <div class="pub-item"><div class="pub-yr">2024</div><div><div class="pub-ti">The Second Demographic Transition Revisited: New Evidence from Household Panel Data</div><div class="pub-au">Lesthaeghe R.V., Kim H., Santos M.</div><div class="pub-jo">European Journal of Population, Vol. 40(2)</div></div><div class="badge b-ci">Highly Cited</div></div>
-    <div class="pub-item"><div class="pub-yr">2024</div><div><div class="pub-ti">Urban Density, Fertility Decline, and the Housing Cost Hypothesis: Cross-National Evidence</div><div class="pub-au">Watanabe K., Fischer R., Osei-Bonsu A.</div><div class="pub-jo">IPS Working Paper No. 2024-17</div></div><div class="badge b-wp">Working Paper</div></div>
-  </div>
-  <div style="margin-top:3rem;"><a href="#" class="btn btn-secondary">View All Publications →</a></div>
-</section>
-
-<section class="section" id="people">
-  <div class="sh fade-up"><div class="sn">03</div><div><h2 class="st">Our Researchers</h2><p class="ss">A multidisciplinary faculty spanning demography, sociology, economics, public health, and geography.</p></div></div>
-  <div class="pg fade-up">
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80" alt="Dr. Elena Vasquez" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Elena Vasquez</div><div class="pc-ro">Director</div><div class="pc-fi">Fertility &amp; Global Demography</div></div></div>
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="Prof. Marcus Kim" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Prof. Marcus Kim</div><div class="pc-ro">Senior Fellow</div><div class="pc-fi">Migration &amp; Displacement</div></div></div>
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&q=80" alt="Dr. Amara Osei" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Amara Osei</div><div class="pc-ro">Research Lead</div><div class="pc-fi">Sub-Saharan Africa Studies</div></div></div>
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80" alt="Prof. Rachel Bellamy" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Prof. Rachel Bellamy</div><div class="pc-ro">Senior Fellow</div><div class="pc-fi">Health &amp; Mortality</div></div></div>
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80" alt="Dr. Kenji Watanabe" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Kenji Watanabe</div><div class="pc-ro">Research Scientist</div><div class="pc-fi">Population &amp; Housing</div></div></div>
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80" alt="Dr. Lucia Moreau" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Lucia Moreau</div><div class="pc-ro">Postdoctoral Fellow</div><div class="pc-fi">Climate &amp; Environment</div></div></div>
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=400&q=80" alt="Dr. Samuel Patel" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Samuel Patel</div><div class="pc-ro">Research Associate</div><div class="pc-fi">Inequality Studies</div></div></div>
-    <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1601412436009-d964bd02edbc?w=400&q=80" alt="Prof. Yun Chen" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Prof. Yun Chen</div><div class="pc-ro">Visiting Scholar</div><div class="pc-fi">East Asian Demography</div></div></div>
-  </div>
-  <div style="margin-top:3rem;text-align:center;"><a href="#" class="btn btn-secondary">View All Faculty &amp; Fellows →</a></div>
-</section>
-
-<section class="section section--news" id="news">
-  <div class="sh fade-up"><div class="sn">04</div><div><h2 class="st">News &amp; Commentary</h2><p class="ss">Analysis and insight from our researchers on the population trends shaping the world.</p></div></div>
-  <div class="ng fade-up">
-    <div class="nc featured"><div class="nc-img"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80" alt="Fertility" loading="lazy"></div><div class="nc-bd"><div class="nc-tag">Featured Analysis</div><div class="nc-dt">February 10, 2026</div><h3>Why Global Fertility May Not Recover — And What It Means for Economic Growth</h3><p>New modeling from the Institute challenges optimistic projections, suggesting structural forces — rising education costs, housing unaffordability, and shifting values — may lock many societies into persistent low fertility for decades.</p><a href="#" class="nc-lk">Read Full Analysis →</a></div></div>
-    <div class="nc"><div class="nc-img"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80" alt="Policy" loading="lazy"></div><div class="nc-bd"><div class="nc-tag">Policy Brief</div><div class="nc-dt">Jan 28, 2026</div><h3>Rethinking Pension Reform in Aging Europe</h3><p>As old-age dependency ratios climb across southern Europe, conventional reform models may be insufficient without complementary immigration policy.</p><a href="#" class="nc-lk">Read →</a></div></div>
-    <div class="nc"><div class="nc-img"><img src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=500&q=80" alt="Migration" loading="lazy"></div><div class="nc-bd"><div class="nc-tag">Commentary</div><div class="nc-dt">Jan 15, 2026</div><h3>The Invisible Crisis: Internal Displacement and Urban Overcrowding</h3><p>Internal displacement receives far less policy attention than international migration, despite growing scale and severity across dozens of countries.</p><a href="#" class="nc-lk">Read →</a></div></div>
-  </div>
-  <div style="margin-top:2.5rem;"><a href="#" class="btn btn-secondary">View All News &amp; Commentary →</a></div>
-</section>
-
-<section class="section section--data" id="data">
-  <div class="sh fade-up"><div class="sn">05</div><div><h2 class="st">Data &amp; Resources</h2><p class="ss">Open datasets, visualizations, and tools freely available to researchers worldwide.</p></div></div>
-  <div class="dg fade-up">
-    <div class="dc"><div class="dc-img"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=80" alt="Database" loading="lazy"></div><div class="dc-bd"><h3>Global Demographic Database</h3><p>Harmonized historical and contemporary demographic indicators for 195 countries spanning 1950–2024. Fertility, mortality, migration, and age structure. Updated quarterly.</p><a href="#" class="dc-lk">Access Dataset →</a></div></div>
-    <div class="dc"><div class="dc-img"><img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80" alt="Urban" loading="lazy"></div><div class="dc-bd"><h3>Urban Migration Index</h3><p>Index capturing rural-to-urban migration flows across 80 low- and middle-income countries since 2000. Version 3 released February 2026 with expanded coverage.</p><a href="#" class="dc-lk">Access Dataset →</a></div></div>
-    <div class="dc"><div class="dc-img"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=700&q=80" alt="Visualizer" loading="lazy"></div><div class="dc-bd"><h3>Population Visualizer Tool</h3><p>Interactive browser-based tool for exploring population pyramids, cohort survival, and demographic projections for all UN member states through 2100.</p><a href="#" class="dc-lk">Open Tool →</a></div></div>
-  </div>
-</section>
-
-<section class="section" id="events">
-  <div class="sh fade-up"><div class="sn">06</div><div><h2 class="st">Events &amp; Seminars</h2><p class="ss">Upcoming workshops, lectures, and conferences hosted by the Institute.</p></div></div>
-  <div class="el fade-up">
-    <div class="ei"><div class="ed"><div class="e-day">14</div><div class="e-mon">Mar 2026</div></div><div><div class="e-ti">Annual Demography Symposium — Population in Crisis: Responses and Projections</div><div class="e-me">Two-day conference · IPS Auditorium + Livestream · Registration Required</div></div><div class="e-ty">Conference</div></div>
-    <div class="ei"><div class="ed"><div class="e-day">28</div><div class="e-mon">Mar 2026</div></div><div><div class="e-ti">Research Seminar: New Methods in Demographic Forecasting under Deep Uncertainty</div><div class="e-me">Lecture · Room 204, Research Building · Open to All</div></div><div class="e-ty">Seminar</div></div>
-    <div class="ei"><div class="ed"><div class="e-day">10</div><div class="e-mon">Apr 2026</div></div><div><div class="e-ti">International Workshop: Population, Climate, and Food Security in the Global South</div><div class="e-me">3-day workshop · Geneva, Switzerland · Application Required</div></div><div class="e-ty">Workshop</div></div>
-    <div class="ei"><div class="ed"><div class="e-day">22</div><div class="e-mon">May 2026</div></div><div><div class="e-ti">Public Lecture: The Coming Demographic Reckoning — Policy Choices for Shrinking Societies</div><div class="e-me">Public Lecture · City Hall, Main Chamber · Free Admission</div></div><div class="e-ty">Public Lecture</div></div>
-  </div>
-  <div style="margin-top:2.5rem;"><a href="#" class="btn btn-secondary">View All Events →</a></div>
-</section>
-
-<section class="section section--contact" id="contact">
-  <div class="sh fade-up"><div class="sn">07</div><div><h2 class="st">Get In Touch</h2><p class="ss">Research collaborations, data access, press inquiries, and general questions — we welcome all.</p></div></div>
-  <div class="cg fade-up">
-    <div class="ci">
-      <h2>Connect With the Institute</h2>
-      <p>Whether you are a researcher, policymaker, journalist, or member of the public, we welcome inquiry and collaboration. Our work is most meaningful when it reaches beyond the academy.</p>
-      <div class="cd"><div class="dl">Address</div><div class="dv">14 Scholar's Square, Research Quarter<br>Cambridge, MA 02138, USA</div></div>
-      <div class="cd"><div class="dl">Email</div><div class="dv">info@ips-research.org</div></div>
-      <div class="cd"><div class="dl">Phone</div><div class="dv">+1 (617) 555-0182</div></div>
-      <div class="cd"><div class="dl">Press</div><div class="dv">press@ips-research.org</div></div>
-      <div class="c-photo"><img src="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=700&q=80" alt="Cambridge MA" loading="lazy"></div>
-    </div>
-    <form class="cf" onsubmit="handleSubmit(event)">
-      <div class="fr">
-        <div class="fg"><label class="fl">First Name</label><input type="text" class="fi" placeholder="Jane"></div>
-        <div class="fg"><label class="fl">Last Name</label><input type="text" class="fi" placeholder="Smith"></div>
+    <div class="about-text">
+      <h2>Science at the Service of People</h2>
+      <p>The Institute for Population Studies is an independent, non-partisan research organization committed to generating and translating evidence on the dynamics of human populations — how we live, move, age, and relate to our environments.</p>
+      <p>Our researchers partner with governments, international agencies, universities, and civil society to ensure demographic knowledge reaches those who most need it: policymakers, advocates, and communities.</p>
+      <div class="pillars">
+        <div><div class="pillar-val">64</div><div class="pillar-lbl">Researchers</div></div>
+        <div><div class="pillar-val">22</div><div class="pillar-lbl">Nationalities</div></div>
+        <div><div class="pillar-val">$48M</div><div class="pillar-lbl">Research Grants</div></div>
+        <div><div class="pillar-val">180</div><div class="pillar-lbl">Partner Nations</div></div>
       </div>
-      <div class="fg"><label class="fl">Email</label><input type="email" class="fi" placeholder="jane@university.edu"></div>
-      <div class="fg"><label class="fl">Organization</label><input type="text" class="fi" placeholder="Harvard University"></div>
-      <div class="fg"><label class="fl">Inquiry Type</label><select class="fs fi"><option>Research Collaboration</option><option>Media / Press Inquiry</option><option>Data Access</option><option>Fellowship / Postdoc</option><option>General Inquiry</option></select></div>
-      <div class="fg"><label class="fl">Message</label><textarea class="fta" placeholder="Tell us about your inquiry..."></textarea></div>
-      <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Send Message →</button>
-    </form>
+    </div>
   </div>
-</section>
 
+  <!-- FIELDWORK PHOTOS -->
+  <div class="fw-strip">
+    <div class="fw-img"><img src="https://images.unsplash.com/photo-1594608661623-aa0bd3a69d98?w=500&q=75" alt="Kenya" loading="lazy"><div class="fw-cap">Maternal Health · Kenya</div></div>
+    <div class="fw-img"><img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=500&q=75" alt="Bangladesh" loading="lazy"><div class="fw-cap">Community Survey · Bangladesh</div></div>
+    <div class="fw-img"><img src="https://images.unsplash.com/photo-1541802645635-11f2286a7482?w=500&q=75" alt="Guatemala" loading="lazy"><div class="fw-cap">Youth Study · Guatemala</div></div>
+    <div class="fw-img"><img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=500&q=75" alt="Nairobi" loading="lazy"><div class="fw-cap">Urban Migration · Nairobi</div></div>
+  </div>
+
+  <!-- IMPACT BANNER -->
+  <div class="ib">
+    <div class="ib-img"></div><div class="ib-ov"></div>
+    <div class="ib-ct">
+      <div>
+        <h2>Influencing Policy Across Five Continents</h2>
+        <p>Our researchers engage with national governments, UN agencies, the World Bank, and civil society — translating demographic evidence into action at every scale.</p>
+        <div style="margin-top:2rem;"><a class="btn btn-primary" data-page="research">Read Our Impact Stories →</a></div>
+      </div>
+      <div class="ib-sg">
+        <div class="ib-s"><div class="ib-sn">140<sup>+</sup></div><div class="ib-sl">Policy Briefs</div></div>
+        <div class="ib-s"><div class="ib-sn">38</div><div class="ib-sl">Gov. Partnerships</div></div>
+        <div class="ib-s"><div class="ib-sn">12<sup>M</sup></div><div class="ib-sl">People Reached</div></div>
+        <div class="ib-s"><div class="ib-sn">3.2<sup>k</sup></div><div class="ib-sl">Cited Papers</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME FOOTER PREVIEW: QUICK LINKS -->
+  <div class="section" style="background:var(--cream);padding:4rem 8vw;">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--rule);">
+      <div style="background:var(--paper);padding:2.5rem 2rem;cursor:pointer;transition:background .2s;" class="quick-card" data-page="research">
+        <div style="font-size:1.8rem;margin-bottom:1rem;">🔬</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:.5rem;">Research</div>
+        <div style="font-size:.85rem;color:var(--muted);">Six active research areas across demography, health, environment, and inequality.</div>
+      </div>
+      <div style="background:var(--paper);padding:2.5rem 2rem;cursor:pointer;transition:background .2s;" class="quick-card" data-page="publications">
+        <div style="font-size:1.8rem;margin-bottom:1rem;">📄</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:.5rem;">Publications</div>
+        <div style="font-size:.85rem;color:var(--muted);">Over 3,200 peer-reviewed papers, working papers, and policy briefs.</div>
+      </div>
+      <div style="background:var(--paper);padding:2.5rem 2rem;cursor:pointer;transition:background .2s;" class="quick-card" data-page="programs">
+        <div style="font-size:1.8rem;margin-bottom:1rem;">🎓</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:.5rem;">Programs</div>
+        <div style="font-size:.85rem;color:var(--muted);">Training, fellowships, and capacity-building programs for researchers worldwide.</div>
+      </div>
+      <div style="background:var(--paper);padding:2.5rem 2rem;cursor:pointer;transition:background .2s;" class="quick-card" data-page="data">
+        <div style="font-size:1.8rem;margin-bottom:1rem;">📊</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:.5rem;">Data &amp; Tools</div>
+        <div style="font-size:.85rem;color:var(--muted);">Open datasets and visualizations covering 195 countries, free for all researchers.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /home -->
+
+
+<!-- ════════════ RESEARCH ════════════ -->
+<div class="page" id="page-research">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Research Areas</h1>
+      <p>Six interconnected domains of inquiry exploring how populations form, move, age, and transform.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="sh fade-up"><div class="sn">01</div><div><h2 class="st">Our Research Domains</h2><p class="ss">Each area is led by a dedicated team of senior fellows, researchers, and postdoctoral scholars working across multiple active projects.</p></div></div>
+    <div class="rg fade-up">
+      <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1511895426328-dc8714191011?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">01 — Fertility</div><h3>Fertility &amp; Family Formation</h3><p>Investigating long-term fertility decline, changing family structures, and the policy contexts shaping reproductive behavior across societies.</p><a href="#" class="rc-lk">Explore →</a></div></div>
+      <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">02 — Migration</div><h3>Migration &amp; Displacement</h3><p>Examining drivers and consequences of human mobility — from forced displacement and refugee crises to urbanization worldwide.</p><a href="#" class="rc-lk">Explore →</a></div></div>
+      <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1516307365426-bea591f05011?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">03 — Aging</div><h3>Population Aging</h3><p>Studying the social, economic, and health implications of aging populations across Europe, East Asia, and the developing world.</p><a href="#" class="rc-lk">Explore →</a></div></div>
+      <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">04 — Health</div><h3>Health &amp; Mortality</h3><p>Analyzing disparities in health outcomes and mortality differentials by race, gender, and socioeconomic status across nations.</p><a href="#" class="rc-lk">Explore →</a></div></div>
+      <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">05 — Environment</div><h3>Population &amp; Environment</h3><p>Exploring intersections of demographic change, climate vulnerability, and sustainability for growing and shrinking populations.</p><a href="#" class="rc-lk">Explore →</a></div></div>
+      <div class="rc"><div class="rc-img" style="background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80')"></div><div class="rc-ov"></div><div class="rc-bd"><div class="rc-n">06 — Inequality</div><h3>Inequality &amp; Stratification</h3><p>Measuring disparities in income, education, and opportunity across demographic groups and how population dynamics reproduce social hierarchies.</p><a href="#" class="rc-lk">Explore →</a></div></div>
+    </div>
+  </section>
+</div><!-- /research -->
+
+
+<!-- ════════════ PUBLICATIONS ════════════ -->
+<div class="page" id="page-publications">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Publications</h1>
+      <p>Peer-reviewed research, working papers, and policy briefs from our researchers.</p>
+    </div>
+  </div>
+  <section class="section section--pubs">
+    <div class="sh fade-up"><div class="sn">02</div><div><h2 class="st">Recent Publications</h2><p class="ss">Browse our latest research across all six thematic areas. All working papers are freely available.</p></div></div>
+    <div class="pub-list fade-up">
+      <div class="pub-item"><div class="pub-yr">2025</div><div><div class="pub-ti">Demographic Transitions in Sub-Saharan Africa: Speed, Variation, and Policy Implications</div><div class="pub-au">Adeyemi O., Singh R., Moreau C., Hassan F.</div><div class="pub-jo">Population and Development Review, Vol. 51(3)</div></div><div class="badge b-new">New</div></div>
+      <div class="pub-item"><div class="pub-yr">2025</div><div><div class="pub-ti">Climate-Induced Internal Migration: Systematic Review of Evidence from South and Southeast Asia</div><div class="pub-au">Chen W., Patel A., Nguyen T.L., Okafor B.</div><div class="pub-jo">Global Environmental Change, Vol. 89</div></div><div class="badge b-oa">Open Access</div></div>
+      <div class="pub-item"><div class="pub-yr">2024</div><div><div class="pub-ti">Longevity Inequality: Decomposing Life Expectancy Gaps by Income Decile in OECD Nations</div><div class="pub-au">Eriksson M., Bellamy J., Torres D.</div><div class="pub-jo">Demography, Vol. 61(4)</div></div><div class="badge b-ci">Highly Cited</div></div>
+      <div class="pub-item"><div class="pub-yr">2024</div><div><div class="pub-ti">The Second Demographic Transition Revisited: New Evidence from Household Panel Data</div><div class="pub-au">Lesthaeghe R.V., Kim H., Santos M.</div><div class="pub-jo">European Journal of Population, Vol. 40(2)</div></div><div class="badge b-ci">Highly Cited</div></div>
+      <div class="pub-item"><div class="pub-yr">2024</div><div><div class="pub-ti">Urban Density, Fertility Decline, and the Housing Cost Hypothesis: Cross-National Evidence</div><div class="pub-au">Watanabe K., Fischer R., Osei-Bonsu A.</div><div class="pub-jo">IPS Working Paper No. 2024-17</div></div><div class="badge b-wp">Working Paper</div></div>
+      <div class="pub-item"><div class="pub-yr">2023</div><div><div class="pub-ti">Mortality Shocks, Fertility Responses, and the Long-Run Demographic Consequences of Pandemics</div><div class="pub-au">Gonzalez R., Park J., Williams A.</div><div class="pub-jo">American Journal of Sociology, Vol. 129(2)</div></div><div class="badge b-ci">Highly Cited</div></div>
+      <div class="pub-item"><div class="pub-yr">2023</div><div><div class="pub-ti">Gender Inequality and Fertility: Cross-National Evidence from Household Panel Data 1990–2020</div><div class="pub-au">Fischer R., Al-Hassan N., Moreau C.</div><div class="pub-jo">World Development, Vol. 167</div></div><div class="badge b-oa">Open Access</div></div>
+      <div class="pub-item"><div class="pub-yr">2023</div><div><div class="pub-ti">Internal Migration and Urban Wage Premiums in Low-Income Countries</div><div class="pub-au">Osei A., Kim H., Nguyen T.L.</div><div class="pub-jo">IPS Working Paper No. 2023-08</div></div><div class="badge b-wp">Working Paper</div></div>
+    </div>
+    <div style="margin-top:3rem;"><a href="#" class="btn btn-secondary">Load More Publications →</a></div>
+  </section>
+</div><!-- /publications -->
+
+
+<!-- ════════════ PEOPLE ════════════ -->
+<div class="page" id="page-people">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Our Researchers</h1>
+      <p>A multidisciplinary faculty spanning demography, sociology, economics, public health, and geography.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="sh fade-up"><div class="sn">03</div><div><h2 class="st">Faculty &amp; Fellows</h2><p class="ss">64 researchers across 22 nationalities, united by a commitment to rigorous, policy-relevant population science.</p></div></div>
+    <div class="pg fade-up">
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80" alt="Dr. Elena Vasquez" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Elena Vasquez</div><div class="pc-ro">Director</div><div class="pc-fi">Fertility &amp; Global Demography</div></div></div>
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="Prof. Marcus Kim" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Prof. Marcus Kim</div><div class="pc-ro">Senior Fellow</div><div class="pc-fi">Migration &amp; Displacement</div></div></div>
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&q=80" alt="Dr. Amara Osei" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Amara Osei</div><div class="pc-ro">Research Lead</div><div class="pc-fi">Sub-Saharan Africa Studies</div></div></div>
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80" alt="Prof. Rachel Bellamy" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Prof. Rachel Bellamy</div><div class="pc-ro">Senior Fellow</div><div class="pc-fi">Health &amp; Mortality</div></div></div>
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80" alt="Dr. Kenji Watanabe" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Kenji Watanabe</div><div class="pc-ro">Research Scientist</div><div class="pc-fi">Population &amp; Housing</div></div></div>
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80" alt="Dr. Lucia Moreau" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Lucia Moreau</div><div class="pc-ro">Postdoctoral Fellow</div><div class="pc-fi">Climate &amp; Environment</div></div></div>
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=400&q=80" alt="Dr. Samuel Patel" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Dr. Samuel Patel</div><div class="pc-ro">Research Associate</div><div class="pc-fi">Inequality Studies</div></div></div>
+      <div class="pc"><div class="pc-iw"><img src="https://images.unsplash.com/photo-1601412436009-d964bd02edbc?w=400&q=80" alt="Prof. Yun Chen" loading="lazy"></div><div class="pc-bd"><div class="pc-nm">Prof. Yun Chen</div><div class="pc-ro">Visiting Scholar</div><div class="pc-fi">East Asian Demography</div></div></div>
+    </div>
+    <div style="margin-top:3rem;text-align:center;"><a href="#" class="btn btn-secondary">View All 64 Researchers →</a></div>
+  </section>
+</div><!-- /people -->
+
+
+<!-- ════════════ NEWS ════════════ -->
+<div class="page" id="page-news">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>News &amp; Commentary</h1>
+      <p>Analysis and insight from our researchers on the population trends shaping the world.</p>
+    </div>
+  </div>
+  <section class="section section--news">
+    <div class="sh fade-up"><div class="sn">04</div><div><h2 class="st">Latest from IPS</h2><p class="ss">Policy briefs, media commentary, featured analyses, and institute news.</p></div></div>
+    <div class="ng fade-up">
+      <div class="nc featured"><div class="nc-img"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80" alt="Fertility" loading="lazy"></div><div class="nc-bd"><div class="nc-tag">Featured Analysis</div><div class="nc-dt">February 10, 2026</div><h3>Why Global Fertility May Not Recover — And What It Means for Economic Growth</h3><p>New modeling from the Institute challenges optimistic projections, suggesting structural forces — rising education costs, housing unaffordability, and shifting values — may lock many societies into persistent low fertility for decades.</p><a href="#" class="nc-lk">Read Full Analysis →</a></div></div>
+      <div class="nc"><div class="nc-img"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80" alt="Policy" loading="lazy"></div><div class="nc-bd"><div class="nc-tag">Policy Brief</div><div class="nc-dt">Jan 28, 2026</div><h3>Rethinking Pension Reform in Aging Europe</h3><p>As old-age dependency ratios climb across southern Europe, conventional reform models may be insufficient without complementary immigration policy.</p><a href="#" class="nc-lk">Read →</a></div></div>
+      <div class="nc"><div class="nc-img"><img src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=500&q=80" alt="Migration" loading="lazy"></div><div class="nc-bd"><div class="nc-tag">Commentary</div><div class="nc-dt">Jan 15, 2026</div><h3>The Invisible Crisis: Internal Displacement and Urban Overcrowding</h3><p>Internal displacement receives far less policy attention than international migration, despite growing scale and severity across dozens of countries.</p><a href="#" class="nc-lk">Read →</a></div></div>
+    </div>
+    <div style="margin-top:2.5rem;"><a href="#" class="btn btn-secondary">Load More Stories →</a></div>
+  </section>
+</div><!-- /news -->
+
+
+<!-- ════════════ DATA ════════════ -->
+<div class="page" id="page-data">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Data &amp; Resources</h1>
+      <p>Open datasets, visualizations, and tools freely available to researchers worldwide.</p>
+    </div>
+  </div>
+  <section class="section section--data">
+    <div class="sh fade-up"><div class="sn">05</div><div><h2 class="st">Open Data &amp; Tools</h2><p class="ss">All datasets are free to download. Registration required for bulk API access.</p></div></div>
+    <div class="dg fade-up">
+      <div class="dc"><div class="dc-img"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=80" alt="Database" loading="lazy"></div><div class="dc-bd"><h3>Global Demographic Database</h3><p>Harmonized historical and contemporary demographic indicators for 195 countries spanning 1950–2024. Fertility, mortality, migration, and age structure. Updated quarterly.</p><a href="#" class="dc-lk">Access Dataset →</a></div></div>
+      <div class="dc"><div class="dc-img"><img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80" alt="Urban" loading="lazy"></div><div class="dc-bd"><h3>Urban Migration Index</h3><p>Index capturing rural-to-urban migration flows across 80 low- and middle-income countries since 2000. Version 3 released February 2026 with expanded coverage.</p><a href="#" class="dc-lk">Access Dataset →</a></div></div>
+      <div class="dc"><div class="dc-img"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=700&q=80" alt="Visualizer" loading="lazy"></div><div class="dc-bd"><h3>Population Visualizer Tool</h3><p>Interactive browser-based tool for exploring population pyramids, cohort survival, and demographic projections for all UN member states through 2100.</p><a href="#" class="dc-lk">Open Tool →</a></div></div>
+    </div>
+  </section>
+</div><!-- /data -->
+
+
+<!-- ════════════ PROGRAMS ════════════ -->
+<div class="page" id="page-programs">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Our Programs</h1>
+      <p>Flagship research, training, and capacity-building programs translating demographic science into real-world impact.</p>
+    </div>
+  </div>
+  <section class="section section--programs">
+    <div class="sh fade-up"><div class="sn">06</div><div><h2 class="st">Active Programs</h2><p class="ss">Six programs operating across research, training, policy engagement, and open data.</p></div></div>
+    <div class="prog-grid fade-up">
+      <div class="prog-card"><div class="prog-img"><img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=700&q=80" alt="Training" loading="lazy"><div class="prog-img-label">Since 1982</div></div><div class="prog-body"><div class="prog-icon">🎓</div><h3>Advanced Training in Demographic Methods</h3><p>Six-week residential training for mid-career researchers from low- and middle-income countries. Covers demographic analysis, spatial modeling, and evidence-to-policy translation.</p><div class="prog-meta"><div class="prog-projects">1,400+ alumni in 90 countries</div><a href="#" class="prog-link">Learn More →</a></div></div></div>
+      <div class="prog-card"><div class="prog-img"><img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700&q=80" alt="Climate" loading="lazy"><div class="prog-img-label">Active Program</div></div><div class="prog-body"><div class="prog-icon">🌍</div><h3>Population, Climate &amp; Sustainability Initiative</h3><p>Cross-disciplinary program examining links between demographic dynamics, environmental change, and sustainable development across Asia, Africa, and Latin America.</p><div class="prog-meta"><div class="prog-projects">22 active projects</div><a href="#" class="prog-link">Learn More →</a></div></div></div>
+      <div class="prog-card"><div class="prog-img"><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=700&q=80" alt="Health" loading="lazy"><div class="prog-img-label">Flagship</div></div><div class="prog-body"><div class="prog-icon">❤️</div><h3>Global Health Equity &amp; Mortality Program</h3><p>Studying the structural determinants of mortality differentials within and across nations, with a focus on maternal health, child survival, and non-communicable disease burden.</p><div class="prog-meta"><div class="prog-projects">39 active projects</div><a href="#" class="prog-link">Learn More →</a></div></div></div>
+      <div class="prog-card"><div class="prog-img"><img src="https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=700&q=80" alt="Policy" loading="lazy"><div class="prog-img-label">Active Program</div></div><div class="prog-body"><div class="prog-icon">🏛️</div><h3>Policy Engagement &amp; Evidence Translation</h3><p>Embedding researchers with government ministries, parliaments, and international agencies to co-produce policy-relevant evidence and support data-driven decision making.</p><div class="prog-meta"><div class="prog-projects">38 government partnerships</div><a href="#" class="prog-link">Learn More →</a></div></div></div>
+      <div class="prog-card"><div class="prog-img"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=80" alt="Data" loading="lazy"><div class="prog-img-label">Since 2010</div></div><div class="prog-body"><div class="prog-icon">📊</div><h3>Open Data &amp; Digital Demography Program</h3><p>Building and maintaining open demographic datasets, computational tools, and digital infrastructure to democratize access to population science globally.</p><div class="prog-meta"><div class="prog-projects">12 open datasets</div><a href="#" class="prog-link">Learn More →</a></div></div></div>
+      <div class="prog-card"><div class="prog-img"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80" alt="Fellowship" loading="lazy"><div class="prog-img-label">Applications Open</div></div><div class="prog-body"><div class="prog-icon">🔬</div><h3>IPS Postdoctoral Fellowship Program</h3><p>Two-year residential fellowships for exceptional early-career scholars. Fellows receive mentorship, research funding, and access to IPS networks across government and academia.</p><div class="prog-meta"><div class="prog-projects">8 fellows per cohort</div><a href="#" class="prog-link">Apply Now →</a></div></div></div>
+    </div>
+    <div style="margin-top:3rem;text-align:center;"><a href="#" class="btn" style="background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.25);">View All Programs →</a></div>
+  </section>
+</div><!-- /programs -->
+
+
+<!-- ════════════ PARTNERS ════════════ -->
+<div class="page" id="page-partners">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Partners &amp; Funders</h1>
+      <p>Leading global institutions working alongside us to generate and translate evidence that reaches those who need it most.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="sh fade-up"><div class="sn">07</div><div><h2 class="st">Our Partners</h2><p class="ss">Partnerships spanning data collection, joint research, capacity building, and policy engagement.</p></div></div>
+    <div class="partners-intro fade-up">
+      <div>
+        <h3>Collaboration at Every Scale</h3>
+        <p>The Institute's work is made possible through partnerships with governments, multilateral agencies, philanthropic foundations, and leading universities. Our partnerships span data collection, joint research, capacity building, and policy engagement across more than 180 countries.</p>
+        <div style="margin-top:2rem;"><a data-page="contact" class="btn btn-primary">Become a Partner →</a></div>
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=700&q=80" alt="Partnership" loading="lazy" style="width:100%;height:280px;object-fit:cover;filter:grayscale(10%);">
+      </div>
+    </div>
+    <div class="partner-tiers fade-up">
+      <div class="partner-tier tier-founding">
+        <div class="partner-tier-label">Founding &amp; Institutional Partners</div>
+        <div class="partner-logos">
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#009edb;">UN</div><h4>United Nations Population Fund</h4><span>UNFPA · Global Partner</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#003087;">WB</div><h4>World Bank Group</h4><span>Development Economics</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#1a7a4a;">WHO</div><h4>World Health Organization</h4><span>Health &amp; Mortality Data</span></div>
+        </div>
+      </div>
+      <div class="partner-tier tier-strategic">
+        <div class="partner-tier-label">Strategic Research Partners</div>
+        <div class="partner-logos">
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#a41034;">HU</div><h4>Harvard University</h4><span>T.H. Chan School of Public Health</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#00356b;">YU</div><h4>Yale University</h4><span>Department of Sociology</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#003262;">UC</div><h4>UC Berkeley</h4><span>Demography Department</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#19193a;">LS</div><h4>London School of Economics</h4><span>Department of Social Policy</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#c0392b;">AU</div><h4>African Union Commission</h4><span>Social Affairs Department</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#e8590c;">GF</div><h4>Gates Foundation</h4><span>Global Health Program</span></div>
+        </div>
+      </div>
+      <div class="partner-tier tier-network">
+        <div class="partner-tier-label">Network &amp; Affiliate Partners</div>
+        <div class="partner-logos">
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#12325a;">IOM</div><h4>IOM</h4><span>Migration Agency</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#4a4a8a;">UP</div><h4>Univ. of Paris</h4><span>INED Partnership</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#2d7a2d;">MK</div><h4>Max Planck Institute</h4><span>Demographic Research</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#7a1a2e;">AP</div><h4>APHRC</h4><span>African Research</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#3a5a7a;">NI</div><h4>NIH</h4><span>Fogarty Int'l Center</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#5a3a7a;">WC</div><h4>Wellcome Trust</h4><span>Global Health Funder</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#7a5a1a;">IB</div><h4>IIED</h4><span>Environment &amp; Dev.</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#1a5a4a;">PA</div><h4>Population Action Int'l</h4><span>Policy Advocacy</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#2a2a6a;">UN</div><h4>UNICEF</h4><span>Child &amp; Youth Data</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#6a1a1a;">RC</div><h4>Rockefeller Foundation</h4><span>Program Funder</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#1a6a4a;">AU</div><h4>AusAID / DFAT</h4><span>Pacific Research</span></div>
+          <div class="partner-logo-card"><div class="partner-logo-emblem" style="background:#4a1a6a;">KF</div><h4>Kauffman Foundation</h4><span>Data Infrastructure</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- /partners -->
+
+
+<!-- ════════════ EVENTS ════════════ -->
+<div class="page" id="page-events">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1527525443983-6e60c75fff46?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Events &amp; Seminars</h1>
+      <p>Upcoming workshops, conferences, public lectures, and seminars hosted by the Institute.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="sh fade-up"><div class="sn">08</div><div><h2 class="st">Upcoming Events</h2><p class="ss">All events are open to the public unless otherwise noted. Registration links below.</p></div></div>
+    <div class="el fade-up">
+      <div class="ei"><div class="ed"><div class="e-day">14</div><div class="e-mon">Mar 2026</div></div><div><div class="e-ti">Annual Demography Symposium — Population in Crisis: Responses and Projections</div><div class="e-me">Two-day conference · IPS Auditorium + Livestream · Registration Required</div></div><div class="e-ty">Conference</div></div>
+      <div class="ei"><div class="ed"><div class="e-day">28</div><div class="e-mon">Mar 2026</div></div><div><div class="e-ti">Research Seminar: New Methods in Demographic Forecasting under Deep Uncertainty</div><div class="e-me">Lecture · Room 204, Research Building · Open to All</div></div><div class="e-ty">Seminar</div></div>
+      <div class="ei"><div class="ed"><div class="e-day">10</div><div class="e-mon">Apr 2026</div></div><div><div class="e-ti">International Workshop: Population, Climate, and Food Security in the Global South</div><div class="e-me">3-day workshop · Geneva, Switzerland · Application Required</div></div><div class="e-ty">Workshop</div></div>
+      <div class="ei"><div class="ed"><div class="e-day">22</div><div class="e-mon">May 2026</div></div><div><div class="e-ti">Public Lecture: The Coming Demographic Reckoning — Policy Choices for Shrinking Societies</div><div class="e-me">Public Lecture · City Hall, Main Chamber · Free Admission</div></div><div class="e-ty">Public Lecture</div></div>
+      <div class="ei"><div class="ed"><div class="e-day">8</div><div class="e-mon">Jun 2026</div></div><div><div class="e-ti">Advanced Methods Workshop: Applied Demographic Microsimulation</div><div class="e-me">2-day intensive · IPS Training Suite · Limited Seats</div></div><div class="e-ty">Workshop</div></div>
+      <div class="ei"><div class="ed"><div class="e-day">19</div><div class="e-mon">Sep 2026</div></div><div><div class="e-ti">IPS Annual Gala &amp; Research Showcase</div><div class="e-me">Evening event · Royal Society Hall · By Invitation</div></div><div class="e-ty">Gala</div></div>
+    </div>
+    <div style="margin-top:2.5rem;"><a href="#" class="btn btn-secondary">View Full Calendar →</a></div>
+  </section>
+</div><!-- /events -->
+
+
+<!-- ════════════ CONTACT ════════════ -->
+<div class="page" id="page-contact">
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=1400&q=80')"></div>
+    <div class="page-hero-ov"></div>
+    <div class="page-hero-ct">
+      <div class="page-hero-eyebrow">Institute for Population Studies</div>
+      <h1>Get In Touch</h1>
+      <p>Research collaborations, data access, press inquiries, and general questions — we welcome all.</p>
+    </div>
+  </div>
+  <section class="section section--contact">
+    <div class="sh fade-up"><div class="sn">09</div><div><h2 class="st">Connect With Us</h2><p class="ss">Whether you are a researcher, policymaker, journalist, or member of the public, we welcome inquiry and collaboration.</p></div></div>
+    <div class="cg fade-up">
+      <div class="ci">
+        <h2>Institute for Population Studies</h2>
+        <p>Our work is most meaningful when it reaches beyond the academy. We welcome inquiry and collaboration from researchers, policymakers, journalists, and members of the public worldwide.</p>
+        <div class="cd"><div class="dl">Address</div><div class="dv">14 Scholar's Square, Research Quarter<br>Cambridge, MA 02138, USA</div></div>
+        <div class="cd"><div class="dl">Email</div><div class="dv">info@ips-research.org</div></div>
+        <div class="cd"><div class="dl">Phone</div><div class="dv">+1 (617) 555-0182</div></div>
+        <div class="cd"><div class="dl">Press</div><div class="dv">press@ips-research.org</div></div>
+        <div class="cd"><div class="dl">Careers</div><div class="dv">careers@ips-research.org</div></div>
+        <div class="c-photo"><img src="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=700&q=80" alt="Cambridge MA" loading="lazy"></div>
+      </div>
+      <form class="cf" onsubmit="handleSubmit(event)">
+        <div class="fr">
+          <div class="fg"><label class="fl">First Name</label><input type="text" class="fi" placeholder="Jane"></div>
+          <div class="fg"><label class="fl">Last Name</label><input type="text" class="fi" placeholder="Smith"></div>
+        </div>
+        <div class="fg"><label class="fl">Email</label><input type="email" class="fi" placeholder="jane@university.edu"></div>
+        <div class="fg"><label class="fl">Organization</label><input type="text" class="fi" placeholder="Harvard University"></div>
+        <div class="fg">
+          <label class="fl">Inquiry Type</label>
+          <select class="fs fi">
+            <option>Research Collaboration</option>
+            <option>Media / Press Inquiry</option>
+            <option>Data Access</option>
+            <option>Fellowship / Postdoc</option>
+            <option>Partnership</option>
+            <option>General Inquiry</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Message</label><textarea class="fta" placeholder="Tell us about your inquiry..."></textarea></div>
+        <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Send Message →</button>
+        <div class="form-success" id="form-success">✓ Your message has been sent. We'll be in touch within 2–3 business days.</div>
+      </form>
+    </div>
+  </section>
+</div><!-- /contact -->
+
+</div><!-- /app -->
+
+<!-- ══════════════ FOOTER ══════════════ -->
 <footer>
   <div class="ft">
     <div>
       <div class="fb">Institute for<br>Population Studies</div>
-      <p class="ftg">Independent, rigorous research on the demographic forces shaping societies, economies, and human well-being across the globe. Founded 1974. Cambridge, MA.</p>
+      <p class="ftg">Independent, rigorous research on the demographic forces shaping societies, economies, and human well-being. Founded 1974 · Cambridge, MA.</p>
       <div class="pb"><div class="pbadge">UN Partner</div><div class="pbadge">World Bank</div><div class="pbadge">NIH Funded</div><div class="pbadge">501(c)(3)</div></div>
     </div>
-    <div class="fc"><h4>Research</h4><ul><li><a href="#">Fertility &amp; Family</a></li><li><a href="#">Migration</a></li><li><a href="#">Population Aging</a></li><li><a href="#">Health &amp; Mortality</a></li><li><a href="#">Environment</a></li><li><a href="#">Inequality</a></li></ul></div>
-    <div class="fc"><h4>Institute</h4><ul><li><a href="#">About IPS</a></li><li><a href="#">People</a></li><li><a href="#">Fellowships</a></li><li><a href="#">Events</a></li><li><a href="#">Press Room</a></li><li><a href="#">Careers</a></li></ul></div>
-    <div class="fc"><h4>Resources</h4><ul><li><a href="#">Publications</a></li><li><a href="#">Datasets</a></li><li><a href="#">Policy Briefs</a></li><li><a href="#">Visualizations</a></li><li><a href="#">Newsletter</a></li><li><a href="#">Donate</a></li></ul></div>
+    <div class="fc"><h4>Research</h4><ul>
+      <li><a data-page="research">Fertility &amp; Family</a></li>
+      <li><a data-page="research">Migration</a></li>
+      <li><a data-page="research">Population Aging</a></li>
+      <li><a data-page="research">Health &amp; Mortality</a></li>
+      <li><a data-page="research">Environment</a></li>
+      <li><a data-page="research">Inequality</a></li>
+    </ul></div>
+    <div class="fc"><h4>Institute</h4><ul>
+      <li><a data-page="people">About IPS</a></li>
+      <li><a data-page="people">People</a></li>
+      <li><a data-page="programs">Fellowships</a></li>
+      <li><a data-page="events">Events</a></li>
+      <li><a data-page="news">Press Room</a></li>
+      <li><a data-page="contact">Careers</a></li>
+    </ul></div>
+    <div class="fc"><h4>Resources</h4><ul>
+      <li><a data-page="publications">Publications</a></li>
+      <li><a data-page="data">Datasets</a></li>
+      <li><a data-page="publications">Policy Briefs</a></li>
+      <li><a data-page="data">Visualizations</a></li>
+      <li><a data-page="contact">Newsletter</a></li>
+      <li><a data-page="contact">Donate</a></li>
+    </ul></div>
   </div>
   <div class="fb-bot">
     <span>© 2026 Institute for Population Studies. All rights reserved.</span>
-    <span>Privacy Policy &nbsp;·&nbsp; Terms of Use &nbsp;·&nbsp; Accessibility</span>
+    <span>Privacy Policy · Terms of Use · Accessibility</span>
   </div>
 </footer>
 
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
 <script>
-const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:.08});
-document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
-window.addEventListener('scroll',()=>{
-  document.getElementById('main-nav').style.boxShadow=window.scrollY>20?'0 2px 24px rgba(13,17,23,0.1)':'none';
-});
-const secs=document.querySelectorAll('[id]'),nls=document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll',()=>{
-  let cur='';
-  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-140)cur=s.id;});
-  nls.forEach(a=>a.style.opacity=a.getAttribute('href')==='#'+cur?'1':'0.6');
-});
-function handleSubmit(e){
-  e.preventDefault();
-  const btn=e.target.querySelector('button[type=submit]');
-  btn.textContent='✓ Message Sent';btn.style.background='#1a7a4a';
-  setTimeout(()=>{btn.textContent='Send Message →';btn.style.background='';},3500);
+// ── PAGE ROUTER ──
+const pages = ['home','research','publications','people','news','data','programs','partners','events','contact'];
+let currentPage = 'home';
+
+function navigateTo(pageId) {
+  if (!pages.includes(pageId)) return;
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target
+  const target = document.getElementById('page-' + pageId);
+  if (target) {
+    target.classList.add('active');
+    currentPage = pageId;
+    // Scroll to top
+    window.scrollTo({top: 0, behavior: 'instant'});
+    // Update URL hash
+    history.pushState({page: pageId}, '', '#' + pageId);
+    // Update document title
+    const titles = {
+      home: 'Institute for Population Studies',
+      research: 'Research — IPS',
+      publications: 'Publications — IPS',
+      people: 'People — IPS',
+      news: 'News & Commentary — IPS',
+      data: 'Data & Resources — IPS',
+      programs: 'Programs — IPS',
+      partners: 'Partners & Funders — IPS',
+      events: 'Events & Seminars — IPS',
+      contact: 'Contact — IPS'
+    };
+    document.title = titles[pageId] || 'Institute for Population Studies';
+    // Update active nav link
+    updateActiveNav(pageId);
+    // Trigger fade-up animations for new page
+    setTimeout(triggerFadeUps, 50);
+    // Close mobile menu if open
+    closeMenu();
+  }
 }
+
+function updateActiveNav(pageId) {
+  document.querySelectorAll('[data-page]').forEach(el => {
+    el.classList.toggle('active', el.dataset.page === pageId);
+  });
+}
+
+// ── CLICK DELEGATION — any [data-page] element ──
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('[data-page]');
+  if (el && el.dataset.page) {
+    e.preventDefault();
+    navigateTo(el.dataset.page);
+  }
+  // Also handle quick-cards on home
+  const qc = e.target.closest('.quick-card');
+  if (qc && qc.dataset.page) {
+    e.preventDefault();
+    navigateTo(qc.dataset.page);
+  }
+});
+
+// ── BACK/FORWARD ──
+window.addEventListener('popstate', function(e) {
+  const page = e.state?.page || location.hash.replace('#','') || 'home';
+  navigateTo(page);
+});
+
+// ── FADE-UP OBSERVER ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+
+function triggerFadeUps() {
+  document.querySelectorAll('#page-' + currentPage + ' .fade-up').forEach(el => {
+    observer.unobserve(el);
+    el.classList.remove('visible');
+    observer.observe(el);
+  });
+}
+
+// ── HAMBURGER ──
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+
+function openMenu() {
+  hamburger.classList.add('open');
+  mobileMenu.classList.add('open');
+  hamburger.setAttribute('aria-expanded','true');
+  document.body.classList.add('menu-open');
+}
+function closeMenu() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  hamburger.setAttribute('aria-expanded','false');
+  document.body.classList.remove('menu-open');
+}
+hamburger.addEventListener('click', () => {
+  hamburger.classList.contains('open') ? closeMenu() : openMenu();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+// ── NAV SHADOW ──
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').style.boxShadow =
+    window.scrollY > 20 ? '0 2px 24px rgba(13,17,23,0.1)' : 'none';
+});
+
+// ── QUICK CARDS HOVER ──
+document.querySelectorAll('.quick-card').forEach(c => {
+  c.addEventListener('mouseenter', () => c.style.background = 'var(--cream)');
+  c.addEventListener('mouseleave', () => c.style.background = 'var(--paper)');
+});
+
+// ── FORM SUBMIT ──
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.style.display = 'none';
+  document.getElementById('form-success').classList.add('show');
+  setTimeout(() => {
+    btn.style.display = '';
+    document.getElementById('form-success').classList.remove('show');
+    e.target.reset();
+  }, 5000);
+}
+
+// ── INIT: load page from hash or default home ──
+(function init() {
+  const hash = location.hash.replace('#','');
+  const startPage = pages.includes(hash) ? hash : 'home';
+  navigateTo(startPage);
+})();
 </script>
 </body>
 </html>
